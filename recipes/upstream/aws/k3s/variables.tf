@@ -78,6 +78,12 @@ variable "k3s_config" {
   default     = null
 }
 
+variable "custom_user_data" {
+  type        = string
+  description = "Custom shell commands appended to the generated k3s user data. Appended verbatim after provisioning; must not conflict with (reboot/reinstall/overwrite) existing provisioning steps. Default null."
+  default     = null
+}
+
 variable "kube_config_path" {
   description = "The path to write the kubeconfig for the RKE cluster"
   type        = string
@@ -225,6 +231,12 @@ variable "sles_version" {
 variable "ubuntu_version" {
   type        = string
   description = "Version of Ubuntu to use for instances (ex: 22.04)"
+  default     = null
+}
+
+variable "vpc_id" {
+  type        = string
+  description = "VPC ID to create the instance(s) and security group in. Provide this together with subnet_id when using an existing VPC."
   default     = null
 }
 

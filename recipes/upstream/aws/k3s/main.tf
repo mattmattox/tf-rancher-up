@@ -11,11 +11,12 @@ locals {
 }
 
 module "k3s_first" {
-  source      = "../../../../modules/distribution/k3s"
-  k3s_token   = var.k3s_token
-  k3s_version = var.k3s_version
-  k3s_channel = var.k3s_channel
-  k3s_config  = var.k3s_config
+  source           = "../../../../modules/distribution/k3s"
+  k3s_token        = var.k3s_token
+  k3s_version      = var.k3s_version
+  k3s_channel      = var.k3s_channel
+  k3s_config       = var.k3s_config
+  custom_user_data = var.custom_user_data
 }
 
 module "k3s_first_server" {
@@ -38,6 +39,8 @@ module "k3s_first_server" {
   instance_security_group = var.instance_security_group
   restricted_access       = var.restricted_access
   create_vpc              = var.create_vpc
+  vpc_id                  = var.vpc_id
+  lookup_default_vpc      = var.vpc_id == null
   vpc_cidr                = var.vpc_cidr
   public_subnets          = var.public_subnets
   private_subnets         = var.private_subnets
@@ -51,12 +54,13 @@ module "k3s_first_server" {
 }
 
 module "k3s_additional" {
-  source          = "../../../../modules/distribution/k3s"
-  k3s_token       = module.k3s_first.k3s_token
-  k3s_version     = var.k3s_version
-  k3s_channel     = var.k3s_channel
-  k3s_config      = var.k3s_config
-  first_server_ip = module.k3s_first_server.instances_private_ip[0]
+  source           = "../../../../modules/distribution/k3s"
+  k3s_token        = module.k3s_first.k3s_token
+  k3s_version      = var.k3s_version
+  k3s_channel      = var.k3s_channel
+  k3s_config       = var.k3s_config
+  custom_user_data = var.custom_user_data
+  first_server_ip  = module.k3s_first_server.instances_private_ip[0]
 }
 
 module "k3s_additional_servers" {
@@ -79,6 +83,7 @@ module "k3s_additional_servers" {
   create_security_group   = false
   instance_security_group = module.k3s_first_server.sg-id
   create_vpc              = false
+  lookup_default_vpc      = false
   subnet_id               = module.k3s_first_server.public_subnets != null ? module.k3s_first_server.public_subnets : var.subnet_id
   user_data               = module.k3s_additional.k3s_server_user_data
   aws_access_key          = var.aws_access_key
@@ -105,6 +110,7 @@ module "k3s_workers" {
   create_security_group   = false
   instance_security_group = module.k3s_first_server.sg-id
   create_vpc              = false
+  lookup_default_vpc      = false
   subnet_id               = module.k3s_first_server.public_subnets != null ? module.k3s_first_server.public_subnets : var.subnet_id
   user_data               = module.k3s_additional.k3s_worker_user_data
   aws_access_key          = var.aws_access_key

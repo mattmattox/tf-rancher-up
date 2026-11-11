@@ -11,11 +11,12 @@ locals {
 }
 
 module "rke2_first" {
-  source       = "../../../../modules/distribution/rke2"
-  rke2_token   = var.rke2_token
-  rke2_version = var.rke2_version
-  rke2_config  = var.rke2_config
-  rke2_ingress = var.rke2_ingress
+  source           = "../../../../modules/distribution/rke2"
+  rke2_token       = var.rke2_token
+  rke2_version     = var.rke2_version
+  rke2_config      = var.rke2_config
+  custom_user_data = var.custom_user_data
+  rke2_ingress     = var.rke2_ingress
 }
 
 module "rke2_first_server" {
@@ -38,6 +39,8 @@ module "rke2_first_server" {
   instance_security_group = var.instance_security_group
   restricted_access       = var.restricted_access
   create_vpc              = var.create_vpc
+  vpc_id                  = var.vpc_id
+  lookup_default_vpc      = var.vpc_id == null
   vpc_cidr                = var.vpc_cidr
   public_subnets          = var.public_subnets
   private_subnets         = var.private_subnets
@@ -51,12 +54,13 @@ module "rke2_first_server" {
 }
 
 module "rke2_additional" {
-  source          = "../../../../modules/distribution/rke2"
-  rke2_token      = module.rke2_first.rke2_token
-  rke2_version    = var.rke2_version
-  rke2_config     = var.rke2_config
-  first_server_ip = module.rke2_first_server.instances_private_ip[0]
-  rke2_ingress    = var.rke2_ingress
+  source           = "../../../../modules/distribution/rke2"
+  rke2_token       = module.rke2_first.rke2_token
+  rke2_version     = var.rke2_version
+  rke2_config      = var.rke2_config
+  custom_user_data = var.custom_user_data
+  first_server_ip  = module.rke2_first_server.instances_private_ip[0]
+  rke2_ingress     = var.rke2_ingress
 }
 
 module "rke2_additional_servers" {
@@ -79,6 +83,7 @@ module "rke2_additional_servers" {
   create_security_group   = false
   instance_security_group = module.rke2_first_server.sg-id
   create_vpc              = false
+  lookup_default_vpc      = false
   subnet_id               = module.rke2_first_server.public_subnets != null ? module.rke2_first_server.public_subnets : var.subnet_id
   user_data               = module.rke2_additional.rke2_user_data
   aws_access_key          = var.aws_access_key
@@ -106,6 +111,7 @@ module "rke2_workers" {
   create_security_group   = false
   instance_security_group = module.rke2_first_server.sg-id
   create_vpc              = false
+  lookup_default_vpc      = false
   subnet_id               = module.rke2_first_server.public_subnets != null ? module.rke2_first_server.public_subnets : var.subnet_id
   user_data               = module.rke2_additional.rke2_worker_user_data
   aws_access_key          = var.aws_access_key

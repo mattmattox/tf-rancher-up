@@ -101,7 +101,7 @@ variable "rancher_password" {
 
 variable "rancher_version" {
   description = "Rancher version to install"
-  default     = null
+  default     = "2.11.3"
   type        = string
 }
 
@@ -163,6 +163,12 @@ variable "ubuntu_version" {
   type        = string
   description = "Version of Ubuntu to use for instances (ex: 22.04)"
   default     = "22.04"
+}
+
+variable "vpc_id" {
+  type        = string
+  description = "VPC ID to create the instance(s) and security group in. Provide this together with subnet_id when using an existing VPC."
+  default     = null
 }
 
 variable "subnet_id" {

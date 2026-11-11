@@ -8,8 +8,8 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_local"></a> [local](#provider\_local) | n/a |
-| <a name="provider_ssh"></a> [ssh](#provider\_ssh) | >= 2.7.0 |
+| <a name="provider_local"></a> [local](#provider\_local) | 2.9.1 |
+| <a name="provider_ssh"></a> [ssh](#provider\_ssh) | 2.9.0 |
 
 ## Modules
 
@@ -45,6 +45,7 @@
 | <a name="input_create_security_group"></a> [create\_security\_group](#input\_create\_security\_group) | Create the security group attached to the instance(s) | `bool` | `true` | no |
 | <a name="input_create_ssh_key_pair"></a> [create\_ssh\_key\_pair](#input\_create\_ssh\_key\_pair) | Specify if a new SSH key pair needs to be created for the instances | `bool` | `null` | no |
 | <a name="input_create_vpc"></a> [create\_vpc](#input\_create\_vpc) | Create a VPC | `bool` | `null` | no |
+| <a name="input_custom_user_data"></a> [custom\_user\_data](#input\_custom\_user\_data) | Custom shell commands appended to the generated RKE2 user data. Appended verbatim after provisioning; must not conflict with (reboot/reinstall/overwrite) existing provisioning steps. Default null. | `string` | `null` | no |
 | <a name="input_iam_instance_profile_name"></a> [iam\_instance\_profile\_name](#input\_iam\_instance\_profile\_name) | Name of an existing IAM instance profile to use | `string` | `null` | no |
 | <a name="input_iam_role_name"></a> [iam\_role\_name](#input\_iam\_role\_name) | Name of the IAM role to create | `string` | `null` | no |
 | <a name="input_instance_ami"></a> [instance\_ami](#input\_instance\_ami) | Override the default SLES or Ubuntu AMI | `string` | `null` | no |
@@ -80,6 +81,7 @@
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | VPC Subnet ID to create the instance(s) in | `any` | `null` | no |
 | <a name="input_ubuntu_version"></a> [ubuntu\_version](#input\_ubuntu\_version) | Version of Ubuntu to use for instances (ex: 22.04) | `string` | `null` | no |
 | <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | CIDR for AWS VPC | `string` | `"10.0.0.0/16"` | no |
+| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | VPC ID to create the instance(s) and security group in. Provide this together with subnet\_id when using an existing VPC. | `string` | `null` | no |
 | <a name="input_wait"></a> [wait](#input\_wait) | An optional wait before installing the Rancher helm chart | `string` | `null` | no |
 | <a name="input_worker_instance_count"></a> [worker\_instance\_count](#input\_worker\_instance\_count) | Number of worker EC2 instances to create | `number` | `null` | no |
 | <a name="input_worker_spot_instances"></a> [worker\_spot\_instances](#input\_worker\_spot\_instances) | Use spot instances for worker nodes | `bool` | `null` | no |
